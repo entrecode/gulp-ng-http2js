@@ -6,11 +6,11 @@ var PluginError = gutil.PluginError;
 var File = gutil.File;
 
 var MODULE_TPL = "(function(module) {\n" +
-        "angular.module(\'${moduleName}\').run([\'$cacheFactory\', function($cacheFactory) {\n" +
-        "  var cache = $cacheFactory.get('$http');\n" +
-        "<% requests.forEach(function(request) { %>  cache.put(\'${request.uri}\',\n    \'${request.contents}\');\n<% }); %>" +
-        "}]);\n" +
-        "})();\n";
+  "angular.module(\'${moduleName}\', []).run([\'$cacheFactory\', function($cacheFactory) {\n" +
+  "  var cache = $cacheFactory('${cacheId}');\n" +
+  "<% requests.forEach(function(request) { %>  cache.put(\'${request.uri}\',\n    \'${request.contents}\');\n<% }); %>" +
+  "}]);\n" +
+  "})();\n";
 
 // file can be a vinyl file object or a string
 // when a string it will construct a new one
@@ -53,6 +53,7 @@ module.exports = function(opt) {
 
     var value = gutil.template(MODULE_TPL, {
       moduleName: opt.moduleName,
+      cacheId: opt.cacheId || '$http',
       requests: requests,
       file: file
     });
@@ -64,14 +65,14 @@ module.exports = function(opt) {
   }
 
   /**
-  * Generates the url of a file.
-  * @param file - The file for which a url should be generated
-  * @param [options] - The plugin options
-  * @param [options.stripPrefix] - The prefix which should be stripped from the file path
-  * @param [options.prefix] - The prefix which should be added to the start of the url
-  * @param [options.rename] - A function that takes in the generated url and returns the desired manipulation.
-  * @returns {string}
-  */
+   * Generates the url of a file.
+   * @param file - The file for which a url should be generated
+   * @param [options] - The plugin options
+   * @param [options.stripPrefix] - The prefix which should be stripped from the file path
+   * @param [options.prefix] - The prefix which should be added to the start of the url
+   * @param [options.rename] - A function that takes in the generated url and returns the desired manipulation.
+   * @returns {string}
+   */
   function getFileUrl(file, options){
     // Start with the relative file path
     var url = file.path;
