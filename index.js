@@ -6,8 +6,8 @@ var PluginError = gutil.PluginError;
 var File = gutil.File;
 
 var MODULE_TPL = "(function(module) {\n" +
-  "angular.module(\'${moduleName}\', []).run([\'$cacheFactory\', function($cacheFactory) {\n" +
-  "  var cache = $cacheFactory('${cacheId}');\n" +
+  "angular.module(\'${moduleName}\', []).run([\'CacheFactory\', function(CacheFactory) {\n" +
+  "  var cache = CacheFactory.createCache('${cacheId}');\n" +
   "<% requests.forEach(function(request) { %>  cache.put(\'${request.uri}\',\n    \'${request.contents}\');\n<% }); %>" +
   "}]);\n" +
   "})();\n";
